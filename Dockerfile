@@ -1,4 +1,4 @@
-FROM node:16.20.2-bullseye
+FROM mcy93w/windowsservercore
 
 # Configura el directorio de trabajo
 WORKDIR C:\app
@@ -7,13 +7,13 @@ WORKDIR C:\app
 COPY package.json .
 
 # Instala las dependencias
-RUN npm install
+RUN pnpm install
 
 # Copia el resto de los archivos
 COPY . .
 
 # Construye la aplicación
-RUN npm run build
+RUN pnpm run build
 
 # Expone el puerto 3000
 EXPOSE 3000
