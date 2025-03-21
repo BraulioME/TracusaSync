@@ -16,13 +16,13 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: trsbraulio
-          password: Br@ulio0898!
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
         run: |
-          docker build -t trsbraulio/plan-padrino-react:latest .
-          docker push trsbraulio/plan-padrino-react:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/plan-padrino-react:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/plan-padrino-react:latest
 
   deploy:
     needs: build-and-push  # Depende del job anterior
@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull trsbraulio/plan-padrino-react:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/plan-padrino-react:latest
             docker stop plan-padrino || true
             docker rm plan-padrino || true
-            docker run -d -p 3000:3000 --name plan-padrino trsbraulio/plan-padrino-react:latest
+            docker run -d -p 3000:3000 --name plan-padrino ${{ secrets.DOCKER_USERNAME }}/plan-padrino-react:latest
